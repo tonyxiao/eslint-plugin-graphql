@@ -8,6 +8,15 @@ import {
   without,
 } from 'lodash';
 
+import {
+  parse as parseConfig,
+  resolveSchema,
+} from 'graphql-config-parser';
+
+import {
+  loopWhile,
+} from 'deasync';
+
 const graphQLValidationRuleNames = [
   'UniqueOperationNames',
   'LoneAnonymousOperation',
@@ -51,25 +60,14 @@ const relayGraphQLValidationRules = relayRuleNames.map((ruleName) => {
   return require(`graphql/validation/rules/${ruleName}`)[ruleName];
 });
 
+const unpackedSchemaJson = parseConfigAndResolveSchema()
+
 const rules = {
   'template-strings'(context) {
     const {
-      schemaJson,
       env,
       tagName: tagNameOption,
     } = context.options[0];
-
-    // Validate and unpack schema
-
-    if (! schemaJson) {
-      throw new Error('Must pass in schemaJson option.');
-    }
-
-    const unpackedSchemaJson = schemaJson.data ? schemaJson.data : schemaJson;
-
-    if (! unpackedSchemaJson.__schema) {
-      throw new Error('Please pass a valid GraphQL introspection query result.');
-    }
 
     // Validate env
     if (env && env !== 'lokka' && env !== 'relay' && env !== 'apollo') {
@@ -217,6 +215,32 @@ function replaceExpressions(node, context, env) {
 function strWithLen(len) {
   // from http://stackoverflow.com/questions/14343844/create-a-string-of-variable-length-filled-with-a-repeated-character
   return new Array(len + 1).join( 'x' );
+}
+
+function parseConfigAndResolveSchema() {
+  const config = parseConfig();
+
+  let wait = true;
+  let schema, error;
+
+  resolveSchema(config)
+    .then((result) => {
+      schema = result;
+      wait = false;
+    })
+    .catch((err) => {
+      error = err;
+      wait = false;
+    });
+
+  // TODO find a cleaner way to do this
+  loopWhile(() => wait);
+
+  if (error) {
+    throw error;
+  }
+
+  return schema.data;
 }
 
 export { rules };

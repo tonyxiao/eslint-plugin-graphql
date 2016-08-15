@@ -1,6 +1,5 @@
 import { rules } from '../src';
 import { RuleTester } from 'eslint';
-import schemaJson from './schema.json';
 
 // Init rule
 
@@ -17,7 +16,7 @@ const parserOptions = {
 
 {
   const options = [
-    { schemaJson },
+    {},
   ];
 
   ruleTester.run('default options', rule, {
@@ -64,7 +63,7 @@ const parserOptions = {
 
 {
   const options = [
-    { schemaJson, tagName: 'myGraphQLTag' },
+    { tagName: 'myGraphQLTag' },
   ];
 
   ruleTester.run('custom tag name', rule, {
@@ -110,7 +109,7 @@ const parserOptions = {
 
 {
   const options = [
-    { schemaJson, env: 'lokka' },
+    { env: 'lokka' },
   ];
 
   ruleTester.run('lokka', rule, {
@@ -251,7 +250,6 @@ const parserOptions = {
 {
   const options = [
     {
-      schemaJson,
       env: 'relay',
     },
   ];
