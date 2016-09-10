@@ -1,5 +1,5 @@
 {
-  "name": "@tonyxiao/eslint-plugin-graphql",
+  "name": "eslint-plugin-graphql",
   "version": "0.2.4",
   "description": "GraphQL ESLint plugin.",
   "author": "Sashko Stubailo",
