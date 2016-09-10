@@ -1,9 +1,9 @@
 {
-  "name": "eslint-plugin-graphql",
+  "name": "@tonyxiao/eslint-plugin-graphql",
   "version": "0.2.4",
   "description": "GraphQL ESLint plugin.",
   "author": "Sashko Stubailo",
-  "main": "src/index.js",
+  "main": "lib/index.js",
   "scripts": {
     "test": "mocha test/index.js",
     "prepublish": "babel ./src --ignore test --out-dir ./lib",
